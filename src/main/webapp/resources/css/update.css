@@ -1,0 +1,168 @@
+body {
+	margin: 0;
+	font-family: "Helvetica";
+	background: rgba(245, 244, 239);
+	overflow: auto;
+	width: 500px;
+	height: 150px;
+}
+
+#fixed {
+	position: relative;
+	/*  position: fixed; */
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 50px;
+}
+
+h2 {
+	margin-top: 100px;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+h3 {
+	text-align: center;
+}
+
+h4 {
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.form_wrap {
+	display: flex;
+	/*  justify-content: center; */
+	flex-direction: column;
+	align-items: center;
+	height: 100vh;
+}
+
+#form_member {
+	display: flex;
+	/*  justify-content: center; */
+	flex-direction: column;
+	align-items: center;
+	height: 100vh;
+}
+
+.submit-button {
+	background-color: rgb(101, 83, 69);;
+	border: none;
+	color: white;
+	width: 20%;
+	height: 35px;
+	font-size: 14pt;
+	margin-top: 20px;
+}
+
+.input-box {
+	position: relative;
+	margin: 10px 0;
+}
+
+form {
+	padding: 10px;
+}
+
+.input-box {
+	position: relative;
+	margin: 10px 0;
+}
+
+.input-box>input {
+	background: transparent;
+	border: none;
+	border-bottom: solid 1px #ccc;
+	padding: 20px 0px 5px 0px;
+	font-size: 14pt;
+	width: 100%;
+}
+
+input::placeholder {
+	color: transparent;
+}
+
+input:placeholder-shown+label {
+	color: #aaa;
+	font-size: 14pt;
+	top: 15px;
+}
+
+input:focus+label, label {
+	color: #8aa1a1;
+	font-size: 10pt;
+	pointer-events: none;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	transition: all 0.2s ease;
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
+}
+
+input:focus, input:not(:placeholder-shown) {
+	border-bottom: solid 1px #8aa1a1;
+	outline: none;
+}
+
+
+#bottomMenu {
+	font-family: "Helvetica";
+	width: 100%;
+	height: 20px;
+	position: relative;
+}
+
+label {
+	display: inline-block;
+	width: 85px;
+	text-align: left;
+}
+
+#form_warp p {
+	margin: 0 auto;
+	width: 480px;
+}
+
+#bottomMenu ul {
+	display: flex; /* Add this line */
+	justify-content: center;
+	align-items: center;
+	margin-top: 15px;
+}
+
+#bottomMenu ul li {
+	list-style-type: none;
+	float: left; /* 가로로 배치 */
+	padding: 5px 20px;
+	border-right: 1px solid #ddd; /* 항목 오른쪽에 테두리 */
+}
+
+#bottomMenu ul li:last-child {
+	border: none; /* 마지막 항목에는 오른쪽 테두리 없음 */
+}
+
+#bottomMenu ul li a, #bottomMenu ul li a:visited {
+	font-size: 15px; /* 글자 크기 */
+	color: #666; /* 글자 색 */
+	text-decoration: none; /* 밑줄 제거 */
+}
+
+#form_warp ul {
+	list-style: none;
+	margin: 0 auto;
+	max-width: 200px;
+}
+
+#form_warp ul li {
+	width: 100%;
+	float: left;
+	text-align: left;
+}

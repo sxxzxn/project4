@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member">
+
+    <resultMap id="memberMap" type="Member">
+        <result property="uid" column="memberid" />
+    </resultMap>
+<!-- 테이블명 / 객체명 -->
+	<select id="login" resultMap="memberMap" parameterType="Member"> 
+	   SELECT * 
+	  	 FROM member 
+		WHERE memberid = #{uid} 
+		  AND pwd = #{pwd}	
+	</select>
+	
+	<insert id="insert" parameterType="Member">
+		insert into member(
+			 memberid
+			,name
+			,pwd
+			,address
+			,phone
+			,age
+			,gender
+			,email
+		) values (
+			 #{uid}
+			,#{name} 
+			,#{pwd} 
+			,#{address} 
+			,#{phone} 
+			,#{age} 
+			,#{gender} 
+			,#{email} 
+
+		) 
+	</insert>
+
+	<select id="existUid" resultMap="memberMap" parameterType="Member">
+		select *
+			from member 
+		where memberid = #{uid}
+	</select>
+	
+	
+	<select id="findUid" resultMap="memberMap" parameterType="Member">
+	    SELECT memberid "uid"
+	   	FROM   member
+	    WHERE  name = #{name} AND age = #{age}
+	</select>
+	
+	<select id="findFwd" resultMap="memberMap" parameterType="Member">
+	    SELECT pwd 
+	   	FROM   member
+	    WHERE  memberid = #{uid} AND name = #{name} AND age = #{age} 
+	</select>
+	
+	<select id="checkPwd" resultMap="memberMap" >
+	
+		SELECT memberid 
+		FROM   member 
+		WHERE  pwd = #{pwd}
+		
+	</select>
+	
+	<update id="updateMember" parameterType="Member">
+		UPDATE member
+		SET name = #{name},
+		    pwd = #{pwd},
+		    address = #{address},
+		    phone = #{phone},
+		    age = #{age},
+		    gender = #{gender},
+		    email = #{email}
+		WHERE memberid = #{uid}
+	    
+	</update>
+	
+	<delete id="deleteMember" parameterType="Member">
+		delete 
+		from member 
+		where memberid = #{uid}
+	</delete>
+	
+	
+
+</mapper>

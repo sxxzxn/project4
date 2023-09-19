@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.notice">
+
+	<resultMap id="noticeMap" type="notice">
+        <result property="writerUid" column="writer_uid" />
+        <result property="regDate" column="reg_date" />
+        <result property="viewCount" column="view_count" />
+        <result property="fixedYN" column="fixed_yn" />
+    </resultMap>
+    
+	<select id="getNoticeList" resultType="notice">
+		select 
+			noticeid
+			, title
+			, contents
+			, writer_uid
+			, reg_date
+			, mod_date
+			, view_count 
+			, delete_yn
+		from notice
+		order by noticeid desc
+	</select>
+
+	<select id="getNoticeById" resultType="Notice" >
+		select 
+			  noticeid  noticeId
+			, title
+			, contents
+		from notice 
+		where noticeid = #{noticeId}
+	</select>
+	
+<!-- 	<insert id="insertBoard" > -->
+<!-- 		<selectKey keyProperty="boardid" resultType="int"  order="BEFORE"> -->
+<!-- 			select  -->
+<!-- 				seq_board.nextval boardid  -->
+<!-- 			from dual -->
+<!-- 		</selectKey> -->
+<!-- 		INSERT INTO board ( -->
+<!-- 			  pid -->
+<!-- 			, boardid -->
+<!-- 			, title -->
+<!-- 			, contents -->
+<!-- 			, writer_uid -->
+<!-- 			, reg_date -->
+<!-- 		) VALUES ( -->
+<!-- 			  0 -->
+<!-- 			, #{boardid} -->
+<!-- 			, #{title} -->
+<!-- 			, #{contents} -->
+<!-- 			, #{writer_uid} -->
+<!-- 			, sysdate -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="insertBoardReply" > -->
+<!-- 		<selectKey keyProperty="boardid" resultType="int"  order="BEFORE"> -->
+<!-- 			select  -->
+<!-- 				seq_board.nextval boardid  -->
+<!-- 			from dual -->
+<!-- 		</selectKey> -->
+<!-- 		INSERT INTO board ( -->
+<!-- 			  pid -->
+<!-- 			, boardid -->
+<!-- 			, title -->
+<!-- 			, contents -->
+<!-- 			, writer_uid -->
+<!-- 			, reg_date -->
+<!-- 		) VALUES ( -->
+<!-- 		      #{pid}  -->
+<!-- 			, #{boardid} -->
+<!-- 			, #{title} -->
+<!-- 			, #{contents} -->
+<!-- 			, #{writer_uid} -->
+<!-- 			, sysdate -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+<!-- 	<update id="updateBoard"> -->
+<!-- 		update board set  -->
+<!-- 			  title=#{title} -->
+<!-- 			, contents=#{contents}  -->
+<!-- 		where boardid=#{boardid} -->
+<!-- 	</update> -->
+	
+<!-- 	<delete id="deleteBoard"> -->
+<!-- 		delete from board  -->
+<!-- 		where boardid=#{boardid} -->
+<!-- 	</delete> -->
+	
+	<select id="noticeTop5" resultType="notice">
+		<![CDATA[
+			select 
+				rownum, sub.*  
+			from (
+				select 
+					* 
+				from notice 
+				order by notice.noticeid desc
+			) sub 
+			where rownum <=5
+		]]>
+	</select>
+	
+	<update id="viewCount">
+		update notice set 
+			view_count = view_count + 1 
+		where noticeid = #{noticeId}
+	</update>
+	
+<!-- 	<delete id="deleteBoards" > -->
+<!-- 		delete from board  -->
+<!-- 		where boardid in -->
+<!-- 		<foreach item="boardid" collection="list"  open="("  separator="," close=")">  -->
+<!-- 			#{boardid}		 -->
+<!-- 		</foreach>  -->
+<!-- 	</delete> -->
+	
+ 	 <select id="getNoticeList2" resultMap="noticeMap"  resultType="notice">
+    
+     SELECT O.* FROM (
+        SELECT ROWNUM nrow, B.* FROM (
+          SELECT
+            A.*
+          FROM notice A
+          <if test="searchTitle != null and !searchTitle.isEmpty()">
+            WHERE title LIKE CONCAT(CONCAT('%', #{searchTitle}), '%')
+          </if>
+          ORDER BY noticeid DESC
+        ) B
+        <![CDATA[
+         WHERE ROWNUM <= #{endNo} 
+         ]]> 
+      ) O
+      WHERE nrow BETWEEN #{startNo} AND #{endNo}
+
+<!--       SELECT O.*, A.writer_uid, A.reg_date, A.fixed_yn FROM ( -->
+<!-- 		  SELECT ROWNUM nrow, B.* FROM ( -->
+<!-- 		    SELECT -->
+<!-- 		      A.* -->
+<!-- 		      , A.writer_uid  writerUid -->
+<!-- 		      , A.reg_date    regDate -->
+<!-- 		      , A.fixed_yn    fixedYN -->
+<!-- 		    FROM notice A -->
+<!-- 		    <if test="searchTitle != null and !searchTitle.isEmpty()"> -->
+<!-- 		      WHERE title LIKE CONCAT(CONCAT('%', #{searchTitle}), '%') -->
+<!-- 		    </if> -->
+<!-- 		    ORDER BY noticeid DESC -->
+<!-- 		  ) B -->
+<!-- 		  <![CDATA[ -->
+<!--  		  WHERE ROWNUM <= #{endNo}  -->
+<!--  		  ]]>  -->
+<!-- 		) O -->
+<!-- 		WHERE nrow BETWEEN #{startNo} AND #{endNo} -->
+   
+  
+  </select>
+	
+    <select id="getTotalCount" resultType="int">
+        
+          select count(*) from Notice
+			<if test="searchTitle != null and !searchTitle.isEmpty()">
+				where title like CONCAT(CONCAT('%', #{searchTitle}), '%')
+			</if>
+           
+    </select>
+	
+<!-- 	<select id="getboardListBoforeN"> -->
+<!-- 		 select * from ( -->
+<!-- 		     select * from board -->
+<!-- 			 <![CDATA[ -->
+<!-- 		     where boardid < #{boardid}  -->
+<!-- 			 ]]> -->
+<!-- 		     order by boardid desc -->
+<!-- 		 ) A -->
+<!-- 		 <![CDATA[ -->
+<!-- 		 where rownum <= N		 -->
+<!-- 		 ]]> -->
+<!-- 	</select> -->
+	
+</mapper>

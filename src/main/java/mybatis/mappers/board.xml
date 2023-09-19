@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.board">
+
+	<select id="getBoardList" resultType="Board">
+		select 
+			boardid
+			, title
+			, contents
+			, writer_uid
+			, reg_date
+			, mod_date
+			, view_count 
+			, delete_yn
+		from board 
+		order by boardid desc
+	</select>
+	
+	<select id="getBoardById" resultType="Board" >
+		select 
+			  boardid  boardId
+			, title
+			, contents
+		from board 
+		where boardid = #{boardId}
+	</select>
+	
+	<insert id="insertBoard" >
+
+		INSERT INTO board (
+			 boardid
+			, title
+			, contents
+			, writer_uid
+		) VALUES (
+			 seq_board.nextval
+			, #{title}
+			, #{contents}
+			, #{writerUid}
+		)
+	</insert>
+	
+<!-- 기존 디폴트로 지정한 값들은 따로 지정할 필요없이 내가 원하는 값만 적어줌 -->
+
+<!-- 	<insert id="insertBoardReply" > -->
+<!-- 		<selectKey keyProperty="boardid" resultType="int"  order="BEFORE"> -->
+<!-- 			select  -->
+<!-- 				seq_board.nextval boardid  -->
+<!-- 			from dual -->
+<!-- 		</selectKey> -->
+<!-- 		INSERT INTO board ( -->
+<!-- 			  pid -->
+<!-- 			, boardid -->
+<!-- 			, title -->
+<!-- 			, contents -->
+<!-- 			, writer_uid -->
+<!-- 			, reg_date -->
+<!-- 		) VALUES ( -->
+<!-- 		      #{pid}  -->
+<!-- 			, #{boardid} -->
+<!-- 			, #{title} -->
+<!-- 			, #{contents} -->
+<!-- 			, #{writer_uid} -->
+<!-- 			, sysdate -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+	<update id="updateBoard">
+		update board set 
+			  title=#{title}
+			, contents=#{contents} 
+		where boardid=#{boardId}
+	</update>
+	
+	<delete id="deleteBoard">
+		delete from board 
+		where boardid=#{boardId}
+	</delete>
+	
+	<select id="boardTop5" resultType="Board">
+		<![CDATA[
+			select 
+				rownum, sub.*  
+			from (
+				select 
+					* 
+				from board 
+				order by board.boardid desc
+			) sub 
+			where rownum <=5
+		]]>
+	</select>
+	
+	<update id="viewCount">
+		update board set 
+			view_count = view_count + 1 
+		where boardid = #{boardId}
+	</update>
+	
+<!-- 	<delete id="deleteBoards" > -->
+<!-- 		delete from board  -->
+<!-- 		where boardid in -->
+<!-- 		<foreach item="boardid" collection="list"  open="("  separator="," close=")">  -->
+<!-- 			#{boardid}		 -->
+<!-- 		</foreach>  -->
+<!-- 	</delete> -->
+	
+	<select id="getBoardList2" resultType="Board">
+		select * from (
+			select 
+				level
+				, pid
+				, boardid boardId 
+				, title
+				, writer_uid writerUid 
+				, reg_date regDate 
+				, view_count viewCount 
+			from board 
+			where delete_yn = 'N' 
+			<if test="boardId != 0">
+				<![CDATA[
+  				and boardid > #{boardId} 
+  				]]> 
+			</if>
+			start with pid=0
+			CONNECT BY PRIOR boardid = pid
+			order SIBLINGS by boardid desc  
+		) A 
+		<![CDATA[
+ 		where rownum <= 10 
+  		]]> 
+	</select>
+	
+<!-- 	<select id="getboardListBoforeN"> -->
+<!-- 		 select * from ( -->
+<!-- 		     select * from board -->
+<!-- 			 <![CDATA[ -->
+<!-- 		     where boardid < #{boardid}  -->
+<!-- 			 ]]> -->
+<!-- 		     order by boardid desc -->
+<!-- 		 ) A -->
+<!-- 		 <![CDATA[ -->
+<!-- 		 where rownum <= N		 -->
+<!-- 		 ]]> -->
+<!-- 	</select> -->
+	
+</mapper>
